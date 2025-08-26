@@ -1,0 +1,117 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.wrapper {
+  padding: 20px;
+}
+.tab-group {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid beige;
+}
+.tab {
+  padding: 8px;
+  min-width: 100px;
+  text-align: center;
+  border-right: 1px solid beige;
+  cursor: pointer;
+}
+.tab:last-child {
+  border-right: none;
+}
+.tab.active {
+  background: #17f5f570;
+  color: #000;
+  font-weight: 700;
+}
+.tab-body {
+  border: 1px solid;
+  border-top: none;
+  padding: 50px 20px;
+}
+
+.button-groups {
+  display: flex;
+  justify-content: center;
+}
+.button-groups button {
+  padding: 10px;
+  min-width: 100px;
+  margin: 10px 12px;
+}
+.form-element {
+  margin: 24px 0;
+}
+.form-element:first-child {
+  margin-top: 0;
+}
+.form-element:last-child {
+  margin-bottom: 0;
+}
+.form-element label {
+  display: block;
+  font-size: 14x;
+  margin-bottom: 12px;
+  color: #17f5f570;
+}
+.form-element input {
+  border: none;
+  height: 32px;
+  font-size: 18px;
+  width: 100%;
+  outline: none;
+  background: transparent;
+  border-bottom: 1px solid #f5f5dc50;
+}
+input:focus {
+  border-color: #f5f5dc;
+}
+.checkbox label {
+  display: block;
+  margin: 16px 0;
+}
+.checkbox label input {
+  font-size: 24px;
+  margin-right: 8px;
+}
+.radio label {
+  display: block;
+  margin: 16px 0;
+}
+.radio label input {
+  font-size: 24px;
+  margin-right: 8px;
+}
+
+/* Error styles */
+.form-element input.error {
+  border-bottom-color: #ff4444;
+}
+
+.error-message {
+  color: #ff4444;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+.checkbox .error-message {
+  margin-top: 8px;
+}
