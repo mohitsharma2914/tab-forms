@@ -1,25 +1,12 @@
-type UserData = {
-  username: string;
-  age: number | string;
-  email: string;
-  interests: string[];
-  theme: string;
-};
-
-type ValidationErrors = {
-  username?: string;
-  email?: string;
-  age?: string;
-  interests?: string;
-};
+import type { UserDataInterface, ValidataionInterface } from "../types";
 
 type PropsInterface = {
-  data: UserData;
-  setData: React.Dispatch<React.SetStateAction<UserData>>;
-  errors: ValidationErrors;
+  data: UserDataInterface;
+  setData: React.Dispatch<React.SetStateAction<UserDataInterface>>;
+  error: ValidataionInterface;
 };
 
-function Interest({ data, setData, errors }: PropsInterface) {
+function Interest({ data, setData, error }: PropsInterface) {
   const { interests } = data;
 
   const interestsData = ["Coding", "Treking", "Badminton", "Cricket", "Music"];
@@ -33,7 +20,7 @@ function Interest({ data, setData, errors }: PropsInterface) {
         : interests.filter((item) => item !== value),
     }));
   };
-  
+
   return (
     <>
       <div className="form-group checkbox">
@@ -50,7 +37,9 @@ function Interest({ data, setData, errors }: PropsInterface) {
             {item}
           </label>
         ))}
-        {errors.interests && <span className="error-message">{errors.interests}</span>}
+        {error.interests && (
+          <span className="error-message">{error.interests}</span>
+        )}
       </div>
     </>
   );

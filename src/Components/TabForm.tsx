@@ -1,27 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Interest from "./Interest";
 import Profile from "./Profile";
 import Settings from "./Settings";
-
-type UserDataInterface = {
-  username: string;
-  age: number | string;
-  email: string;
-  interests: string[];
-  theme: string;
-};
-
-type ValidationErrors = {
-  username?: string;
-  email?: string;
-  age?: string;
-  interests?: string;
-};
+import type { UserDataInterface, ValidataionInterface } from "../types";
 
 function TabForm() {
   const [activeTab, setActiveTab] = useState(0);
-  const [errors, setErrors] = useState<ValidationErrors>({});
-
+  const [error, setError] = useState<ValidataionInterface>({});
+  const [isSuccess, setSuccess] = useState(false);
   const userData = {
     username: "",
     email: "",
@@ -45,34 +31,37 @@ function TabForm() {
     },
   ];
 
-  const validateField = (field: string, value: unknown): string | undefined => {
+  const ActiveTabComponent = TabsData[activeTab].component;
+
+  const validationFiled = (field: string) => {
     switch (field) {
       case "username": {
-        const username = String(value);
-        if (!username || username.trim() === "") return "Name is required";
-        if (username.length < 2) return "Name must be at least 2 characters";
-        if (username.length > 70) return "Name must be less than 70 characters";
+        const username = data.username;
+        const userNum = parseInt(username);
+        if (!isNaN(userNum)) return "Please enter name not a number";
+        if (!username || username.trim() === "") return "Name cannot be empty";
+        if (username.length < 2 || username.length > 70)
+          return "Enter valid name";
         return undefined;
       }
       case "email": {
-        const email = String(value);
-        if (!email || email.trim() === "") return "Email is required";
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) return "Please enter a valid email address";
+        const email = data.email;
+        if (!email || email.trim() === "") return "Email cannot be empty";
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!regex.test(email)) return "Enter valid Email";
         return undefined;
       }
       case "age": {
-        const age = String(value);
-        if (!age || age === "") return "Age is required";
-        const ageNum = parseInt(age);
-        if (isNaN(ageNum)) return "Age must be a number";
-        if (ageNum < 18) return "Age must be at least 18";
-        if (ageNum > 90) return "Age must be less than 90";
+        const ageString = String(data.age);
+        if (!ageString || ageString === "") return "Age is required";
+        const age = parseInt(ageString);
+        if (isNaN(age)) return "Age must be a number";
+        if (age < 18 || age > 90) return "Enter valid Age";
         return undefined;
       }
       case "interests": {
-        const interests = Array.isArray(value) ? value : [];
-        if (interests.length === 0) return "Please select at least one interest";
+        const interests = data.interests;
+        if (interests.length == 0) return "Please select atleast one Interest";
         return undefined;
       }
       default:
@@ -80,32 +69,30 @@ function TabForm() {
     }
   };
 
-  const validateCurrentTab = (): boolean => {
-    const newErrors: ValidationErrors = {};
-    const currentTabName = TabsData[activeTab].name;
-    
-    if (currentTabName === "Profile") {
-      // Profile tab validation
-      const usernameError = validateField("username", data.username);
-      const emailError = validateField("email", data.email);
-      const ageError = validateField("age", data.age);
-      
-      if (usernameError) newErrors.username = usernameError;
-      if (emailError) newErrors.email = emailError;
-      if (ageError) newErrors.age = ageError;
-    } else if (currentTabName === "Interest") {
-      // Interest tab validation
-      const interestsError = validateField("interests", data.interests);
-      if (interestsError) newErrors.interests = interestsError;
+  const validateActiveTab = () => {
+    const tab = TabsData[activeTab].name;
+    const errors: ValidataionInterface = {};
+    if (tab == "Profile") {
+      const username = validationFiled("username");
+      const email = validationFiled("email");
+      const age = validationFiled("age");
+      if (username) errors.username = username;
+      if (email) errors.email = email;
+      if (age) errors.age = age;
+    } else if (tab == "Interest") {
+      const interests = validationFiled("interests");
+      if (interests) errors.interests = interests;
     }
-    // Settings tab doesn't need validation as it's just theme selection
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setError(errors);
+    return Object.keys(errors).length === 0;
   };
 
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
+
   const handleNext = () => {
-    if (validateCurrentTab()) {
+    if (validateActiveTab()) {
       setActiveTab((prev) => prev + 1);
     }
   };
@@ -115,13 +102,13 @@ function TabForm() {
   };
 
   const handleSubmit = () => {
-    if (validateCurrentTab()) {
+    if (validateActiveTab()) {
       // send Data API Call
+      setSuccess(true);
       console.log("Data", data);
     }
   };
 
-  const ActiveTabComponent = TabsData[activeTab].component;
   return (
     <>
       <div className="wrapper">
@@ -130,18 +117,14 @@ function TabForm() {
             <div
               key={index}
               className={`tab ${index == activeTab ? "active" : ""}`}
-              onClick={() => setActiveTab(index)}
+              onClick={() => validateActiveTab() && setActiveTab(index)}
             >
               {item.name}
             </div>
           ))}
         </div>
         <div className="tab-body">
-          <ActiveTabComponent
-            data={data}
-            setData={setData}
-            errors={errors}
-          />
+          <ActiveTabComponent data={data} setData={setData} error={error} />
         </div>
         <div className="button-groups">
           <button disabled={activeTab == 0} onClick={handlePrev}>
@@ -154,6 +137,9 @@ function TabForm() {
             <button onClick={handleSubmit}>Submit</button>
           )}
         </div>
+        {isSuccess && (
+          <p className="success-message">Form sumbitted successfully!</p>
+        )}
       </div>
     </>
   );

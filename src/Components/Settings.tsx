@@ -1,22 +1,8 @@
-type UserData = {
-  username: string;
-  age: number | string;
-  email: string;
-  interests: string[];
-  theme: string;
-};
-
-type ValidationErrors = {
-  username?: string;
-  email?: string;
-  age?: string;
-  interests?: string;
-};
+import type { UserDataInterface } from "../types";
 
 type PropsInterface = {
-  data: UserData;
-  setData: React.Dispatch<React.SetStateAction<UserData>>;
-  errors: ValidationErrors;
+  data: UserDataInterface;
+  setData: React.Dispatch<React.SetStateAction<UserDataInterface>>;
 };
 
 function Settings({ data, setData }: PropsInterface) {

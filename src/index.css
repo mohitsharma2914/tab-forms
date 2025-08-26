@@ -115,3 +115,8 @@ input:focus {
 .checkbox .error-message {
   margin-top: 8px;
 }
+.success-message {
+  color: green;
+  font-size: 14px;
+  text-align: center;
+}

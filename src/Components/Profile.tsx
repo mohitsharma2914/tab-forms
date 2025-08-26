@@ -1,32 +1,22 @@
-type UserData = {
-  username: string;
-  age: number | string;
-  email: string;
-  interests: string[];
-  theme: string;
-};
-
-type ValidationErrors = {
-  username?: string;
-  email?: string;
-  age?: string;
-  interests?: string;
-};
+import type { UserDataInterface, ValidataionInterface } from "../types";
 
 type PropsInterface = {
-  data: UserData;
-  setData: React.Dispatch<React.SetStateAction<UserData>>;
-  errors: ValidationErrors;
+  data: UserDataInterface;
+  setData: React.Dispatch<React.SetStateAction<UserDataInterface>>;
+  error: ValidataionInterface;
 };
 
-function Profile({ data, setData, errors }: PropsInterface) {
+function Profile({ data, setData, error }: PropsInterface) {
   const { username, email, age } = data;
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
+  const handleInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: string
+  ) => {
     const value = e.target.value;
     setData((prevData) => ({ ...prevData, [field]: value }));
   };
-  
+
   return (
     <>
       <div className="form-group">
@@ -40,9 +30,11 @@ function Profile({ data, setData, errors }: PropsInterface) {
             autoComplete="off"
             placeholder="Enter Name"
             onChange={(e) => handleInput(e, "username")}
-            className={errors.username ? "error" : ""}
+            className={error.username ? "error" : ""}
           />
-          {errors.username && <span className="error-message">{errors.username}</span>}
+          {error.username && (
+            <span className="error-message">{error.username}</span>
+          )}
         </div>
         <div className="form-element">
           <label htmlFor="email">Email </label>
@@ -54,9 +46,9 @@ function Profile({ data, setData, errors }: PropsInterface) {
             autoComplete="off"
             placeholder="Enter Email"
             onChange={(e) => handleInput(e, "email")}
-            className={errors.email ? "error" : ""}
+            className={error.email ? "error" : ""}
           />
-          {errors.email && <span className="error-message">{errors.email}</span>}
+          {error.email && <span className="error-message">{error.email}</span>}
         </div>
         <div className="form-element">
           <label htmlFor="age">Age </label>
@@ -68,9 +60,9 @@ function Profile({ data, setData, errors }: PropsInterface) {
             autoComplete="off"
             placeholder="Enter Age"
             onChange={(e) => handleInput(e, "age")}
-            className={errors.age ? "error" : ""}
+            className={error.age ? "error" : ""}
           />
-          {errors.age && <span className="error-message">{errors.age}</span>}
+          {error.age && <span className="error-message">{error.age}</span>}
         </div>
       </div>
     </>
