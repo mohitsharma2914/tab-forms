@@ -21,12 +21,10 @@ function Profile({
     e: React.ChangeEvent<HTMLInputElement>,
     field: string
   ) => {
-    if (e.target.value == "") {
-      setError((prev: ValidataionInterface) => ({
-        ...prev,
-        [field]: value,
-      }));
-    }
+    setError((prev: ValidataionInterface) => ({
+      ...prev,
+      [field]: undefined,
+    }));
     const value = e.target.value;
     setData((prevData) => ({ ...prevData, [field]: value }));
   };
