@@ -33,6 +33,14 @@ function TabForm() {
 
   const ActiveTabComponent = TabsData[activeTab].component;
 
+  const handleBlurValidation = (field: string) => {
+    const value = data[field as keyof UserDataInterface];
+    setError((prev) => ({
+      ...prev,
+      [field]: value ? validationFiled(field) : "",
+    }));
+  };
+
   const validationFiled = (field: string) => {
     switch (field) {
       case "username": {
@@ -124,7 +132,13 @@ function TabForm() {
           ))}
         </div>
         <div className="tab-body">
-          <ActiveTabComponent data={data} setData={setData} error={error} />
+          <ActiveTabComponent
+            data={data}
+            setData={setData}
+            error={error}
+            setError={setError}
+            onBlurHandle={handleBlurValidation}
+          />
         </div>
         <div className="button-groups">
           <button disabled={activeTab == 0} onClick={handlePrev}>
